@@ -1,7 +1,9 @@
 import numpy as np
+import torch
 from torch import optim
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
+import matplotlib.pyplot as plt
 
 from .trainer import BaseTrainer, logger, NanException, EarlyStoppingException
 
@@ -48,6 +50,7 @@ class AlternatingTrainer(BaseTrainer):
         trainer_order=None,
         shuffle_trainer_order=False,
         subset_callbacks=None,
+        write_per_epoch_plots=False
     ):
         """ Start training. """
 
@@ -92,7 +95,6 @@ class AlternatingTrainer(BaseTrainer):
             batch_counters_train, batch_counters_val = [0] * len(trainer_order), [0] * len(trainer_order)
 
             try:
-
                 # Loop over subsets of data
                 for i_subset in range(subsets):
                     logger.debug("Epoch subset %s / %s", i_subset + 1, subsets)
@@ -129,6 +131,27 @@ class AlternatingTrainer(BaseTrainer):
                             i_batch_start_val=batch_counter_val,
                             **trainer_kwargs_
                         )
+
+                        # >>>>> Added by Chris >>>>>
+                        if write_per_epoch_plots:
+                            self.model.eval()
+                            with torch.no_grad():
+                                samples = self.model.sample(n=10_000).detach().numpy()
+
+                                plt.figure(figsize=(5, 5), dpi=200)
+                                plt.title(f"Epoch {i_epoch}")
+                                plt.scatter(samples[:, 0], samples[:, 1], s=1, c="darkmagenta");
+                                plt.xlim(-2.3, 2.3)
+                                plt.ylim(-2.3, 2.3)
+                                plt.axis("off")
+                                plt.axis("equal")
+                                plt.tight_layout()
+                                plt.savefig(f"../figures/spiral_mflow/epoch_{i_epoch}.png")
+                                plt.close()
+                                plt.clf()
+                                plt.cla()
+                            self.model.train()
+                        # <<<<< Added by Chris <<<<<
 
                         # Keep track of losses
                         loss_train += loss_train_trainer / subsets
