@@ -140,11 +140,13 @@ class AlternatingTrainer(BaseTrainer):
 
                                 plt.figure(figsize=(5, 5), dpi=200)
                                 plt.title(f"Epoch {i_epoch}")
-                                plt.scatter(samples[:, 0], samples[:, 1], s=1, c="darkmagenta");
+                                X = dataset.tensors[0]
+                                plt.scatter(X[:, 0], X[:, 1], s=0.8, c="gray", alpha=0.1)
+                                plt.scatter(samples[:, 0], samples[:, 1], s=1, c="darkmagenta")
                                 plt.xlim(-2.3, 2.3)
                                 plt.ylim(-2.3, 2.3)
+                                plt.gca().set_aspect("equal", adjustable="box")
                                 plt.axis("off")
-                                plt.axis("equal")
                                 plt.tight_layout()
                                 plt.savefig(f"../figures/spiral_mflow/epoch_{i_epoch}.png")
                                 plt.close()
