@@ -1,3 +1,5 @@
+from typing import Dict
+import pprint
 import numpy as np
 import torch
 from torch import optim
@@ -50,7 +52,8 @@ class AlternatingTrainer(BaseTrainer):
         trainer_order=None,
         shuffle_trainer_order=False,
         subset_callbacks=None,
-        write_per_epoch_plots=False
+        write_per_epoch_plots=False,  # Samples model after each epoch and writes plot to disk
+        params:Dict|None=None  # Parameter dictionary, used only for plotting
     ):
         """ Start training. """
 
@@ -147,6 +150,7 @@ class AlternatingTrainer(BaseTrainer):
                                 plt.ylim(-2.3, 2.3)
                                 plt.gca().set_aspect("equal", adjustable="box")
                                 plt.axis("off")
+                                plt.text(0, -2.2, pprint.pformat(params, indent=4))
                                 plt.tight_layout()
                                 plt.savefig(f"../figures/spiral_mflow/epoch_{i_epoch}.png")
                                 plt.close()
