@@ -136,15 +136,21 @@ class AlternatingTrainer(BaseTrainer):
                         )
 
                         # >>>>> Added by Chris >>>>>
-                        if write_per_epoch_plots:
+                        if write_per_epoch_plots and i_tr_unsrt == 0:
                             self.model.eval()
                             with torch.no_grad():
                                 samples = self.model.sample(n=10_000).detach().numpy()
 
+                                # training_samples = [batch for batch in train_loader]
+                                # print(len(training_samples))
+                                # print(training_samples[0])
+                                # print(training_samples[0][0].shape)
+                                # exit()
+
                                 plt.figure(figsize=(5, 5), dpi=200)
-                                plt.title(f"Epoch {i_epoch}")
+                                plt.title(f"Epoch {i_epoch}, Trainer {i_tr_unsrt}")
                                 X = dataset.tensors[0]
-                                plt.scatter(X[:, 0], X[:, 1], s=0.8, c="gray", alpha=0.1)
+                                plt.scatter(X[:, 0], X[:, 1], s=0.8, c="gray", alpha=0.01)
                                 plt.scatter(samples[:, 0], samples[:, 1], s=1, c="darkmagenta")
                                 plt.xlim(-2.3, 2.3)
                                 plt.ylim(-2.3, 2.3)
@@ -152,7 +158,7 @@ class AlternatingTrainer(BaseTrainer):
                                 plt.axis("off")
                                 plt.text(0, -2.2, pprint.pformat(params, indent=4))
                                 plt.tight_layout()
-                                plt.savefig(f"../figures/spiral_mflow/epoch_{i_epoch}.png")
+                                plt.savefig(f"../figures/spiral_mflow/epoch_{i_epoch}_trainer_{i_tr_unsrt}.png")
                                 plt.close()
                                 plt.clf()
                                 plt.cla()

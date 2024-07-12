@@ -44,7 +44,7 @@ def create_video_from_images(image_dir, output_filename, fps=24):
 
 if __name__ == "__main__":
     # Define the path to the directory containing the images
-    FIGURES_DIR = Path("figures/spiral_mflow")
-    OUTPUT_PATH = FIGURES_DIR / "spiral_mflow_rotations_1.5.mp4"
+    FIGURES_DIR = Path("figures/spiral_mflow_nrotations_1.2_successful")
+    OUTPUT_PATH = FIGURES_DIR / "spiral_mflow_nrotations_1.2_successful.mp4"
 
-    create_video_from_images(FIGURES_DIR, OUTPUT_PATH, fps=10)
+    create_video_from_images(FIGURES_DIR, OUTPUT_PATH, fps=8)
