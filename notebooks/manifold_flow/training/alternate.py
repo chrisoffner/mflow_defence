@@ -104,6 +104,7 @@ class AlternatingTrainer(BaseTrainer):
 
                     # Loop over phases / trainers
                     for i_tr_unsrt, i_trainer in enumerate(trainer_order):
+                        logger.info(f"Epoch {i_epoch} with trainer {i_trainer}")
                         trainer = self.trainers[i_trainer]
                         opt = opts[i_trainer]
                         trainer_kwargs_ = trainer_kwargs[i_trainer]
@@ -139,7 +140,7 @@ class AlternatingTrainer(BaseTrainer):
                         if write_per_epoch_plots and i_tr_unsrt == 0:
                             self.model.eval()
                             with torch.no_grad():
-                                samples = self.model.sample(n=10_000).detach().numpy()
+                                samples = self.model.sample(n=10_000).detach().cpu().numpy()
 
                                 # training_samples = [batch for batch in train_loader]
                                 # print(len(training_samples))
@@ -151,7 +152,7 @@ class AlternatingTrainer(BaseTrainer):
                                 plt.title(f"Epoch {i_epoch}, Trainer {i_tr_unsrt}")
                                 X = dataset.tensors[0]
                                 plt.scatter(X[:, 0], X[:, 1], s=0.8, c="gray", alpha=0.01)
-                                plt.scatter(samples[:, 0], samples[:, 1], s=1, c="darkmagenta")
+                                plt.scatter(samples[:, 0], samples[:, 1], s=1, c="darkmagenta", alpha=0.1)
                                 plt.xlim(-2.3, 2.3)
                                 plt.ylim(-2.3, 2.3)
                                 plt.gca().set_aspect("equal", adjustable="box")
