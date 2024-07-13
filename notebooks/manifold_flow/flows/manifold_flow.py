@@ -102,6 +102,7 @@ class ManifoldFlow(BaseFlow):
         return u, h_manifold, h_orthogonal, log_det_outer, log_det_inner
 
     def _decode(self, u, mode, u_orthogonal=None, context=None):
+        print(f"ENTER _decode")
         if mode == "mf" and not u.requires_grad:
             u.requires_grad = True
 
@@ -119,6 +120,7 @@ class ManifoldFlow(BaseFlow):
             x, inv_jacobian_outer = self.outer_transform.inverse(h, full_jacobian=True, context=context if self.apply_context_to_outer else None)
             inv_log_det_outer = None
 
+        print(f"EXIT _decode")
         return x, inv_log_det_inner, inv_log_det_outer, inv_jacobian_outer, h
 
     def _log_prob(self, mode, u, h_orthogonal, log_det_inner, log_det_outer, inv_log_det_inner, inv_log_det_outer, inv_jacobian_outer):
