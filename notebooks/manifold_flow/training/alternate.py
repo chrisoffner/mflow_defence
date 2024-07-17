@@ -2,12 +2,61 @@ from typing import Dict
 import pprint
 import numpy as np
 import torch
+from pathlib import Path
 from torch import optim
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 import matplotlib.pyplot as plt
 
 from .trainer import BaseTrainer, logger, NanException, EarlyStoppingException
+
+def plot_grid_lines(
+        manifold_points: torch.Tensor,
+        mflow_model:     torch.nn.Module,
+        n_samples:       int,
+        range:           float,
+        axis:            str = "both",
+        plot_title:      str = "",
+        file_path:       Path|None = None
+    ):
+    # Set up the plot
+    plt.figure(figsize=(5, 5), dpi=200)
+    plt.title(plot_title)
+    plt.scatter(*manifold_points.T, s=1, alpha=1, c="plum")
+
+    grid_values = np.linspace(-range, range, 33)
+    
+    for val in grid_values:
+        # Generate points on a line grid
+        if axis in ["x", "both"]:
+            line_points = np.column_stack([np.full(n_samples, val), np.linspace(-range, range, n_samples)])
+        if axis in ["y", "both"]:
+            line_points = np.column_stack([np.linspace(-range, range, n_samples), np.full(n_samples, val)])
+        
+        # Convert to torch tensor and ensure float32 dtype
+        line_points_tensor = torch.tensor(line_points, dtype=torch.float32)
+
+        # Map grid points from latent space to ambient data space
+        points_proj = mflow_model.outer_transform.inverse(line_points_tensor)[0].detach().numpy()
+        
+        # Plot the warped grid
+        color = "hotpink" if abs(val) < 0.1 else "lightgray"
+        lw    = 2         if abs(val) < 0.1 else 0.8
+        plt.plot(points_proj[:, 0], points_proj[:, 1], lw=lw, color=color)
+
+    # Finalize plot settings
+    plt.gca().set_aspect("equal", adjustable="box")
+    plt.axis("off")
+    plt.xlim(-2.3, 2.3)
+    plt.ylim(-2.3, 2.3)
+    plt.tight_layout()
+
+    if file_path is not None:
+        plt.savefig(str(file_path))
+    
+    plt.close()
+    plt.cla()
+    plt.clf()
 
 
 class AlternatingTrainer(BaseTrainer):
@@ -104,7 +153,6 @@ class AlternatingTrainer(BaseTrainer):
 
                     # Loop over phases / trainers
                     for i_tr_unsrt, i_trainer in enumerate(trainer_order):
-                        logger.info(f"Epoch {i_epoch} with trainer {i_trainer}")
                         trainer = self.trainers[i_trainer]
                         opt = opts[i_trainer]
                         trainer_kwargs_ = trainer_kwargs[i_trainer]
@@ -140,7 +188,8 @@ class AlternatingTrainer(BaseTrainer):
                         if write_per_epoch_plots and i_tr_unsrt == 0:
                             self.model.eval()
                             with torch.no_grad():
-                                samples = self.model.sample(n=10_000).detach().cpu().numpy()
+                                # X = dataset.tensors[0]
+                                # samples = self.model.sample(n=10_000).detach().cpu().numpy()
 
                                 # training_samples = [batch for batch in train_loader]
                                 # print(len(training_samples))
@@ -148,21 +197,33 @@ class AlternatingTrainer(BaseTrainer):
                                 # print(training_samples[0][0].shape)
                                 # exit()
 
-                                plt.figure(figsize=(5, 5), dpi=200)
-                                plt.title(f"Epoch {i_epoch}, Trainer {i_tr_unsrt}")
-                                X = dataset.tensors[0]
-                                plt.scatter(X[:, 0], X[:, 1], s=0.8, c="gray", alpha=0.01)
-                                plt.scatter(samples[:, 0], samples[:, 1], s=1, c="darkmagenta", alpha=0.1)
-                                plt.xlim(-2.3, 2.3)
-                                plt.ylim(-2.3, 2.3)
-                                plt.gca().set_aspect("equal", adjustable="box")
-                                plt.axis("off")
-                                plt.text(0, -2.2, pprint.pformat(params, indent=4))
-                                plt.tight_layout()
-                                plt.savefig(f"../figures/spiral_mflow/epoch_{i_epoch}_trainer_{i_tr_unsrt}.png")
-                                plt.close()
-                                plt.clf()
-                                plt.cla()
+                                # plt.figure(figsize=(5, 5), dpi=200)
+                                # plt.title(f"Epoch {i_epoch}, Trainer {i_tr_unsrt}")
+                                # plt.scatter(X[:, 0], X[:, 1], s=0.8, c="gray", alpha=0.01)
+                                # plt.scatter(samples[:, 0], samples[:, 1], s=1, c="darkmagenta", alpha=0.1)
+                                # plt.xlim(-2.3, 2.3)
+                                # plt.ylim(-2.3, 2.3)
+                                # plt.gca().set_aspect("equal", adjustable="box")
+                                # plt.axis("off")
+                                # plt.text(0, -2.2, pprint.pformat(params, indent=4))
+                                # plt.tight_layout()
+                                # plt.savefig(f"../figures/spiral_mflow/epoch_{i_epoch}_trainer_{i_tr_unsrt}.png")
+                                # plt.close()
+                                # plt.clf()
+                                # plt.cla()
+
+                                # Plot grid lines
+                                val_range = 5
+                                n_samples = 10_000
+                                file_path = Path(f"../figures/spiral_mflow/epoch_{i_epoch}.pdf")
+                                plot_grid_lines(
+                                    manifold_points=dataset.tensors[0],
+                                    mflow_model=self.model,
+                                    n_samples=n_samples,
+                                    range=val_range,
+                                    plot_title=f"Epoch {i_epoch}",
+                                    file_path=file_path
+                                )
                             self.model.train()
                         # <<<<< Added by Chris <<<<<
 
