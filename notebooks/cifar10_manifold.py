@@ -65,7 +65,7 @@ def main():
     start_time = time.time()  # Record the start time
     setup_logging()
 
-    dataset = get_cifar_dataset(n_samples = 1000)
+    dataset = get_cifar_dataset(n_samples = 1000) # max number is 60.000
 
     latentdim=2,
     outerlayers=20

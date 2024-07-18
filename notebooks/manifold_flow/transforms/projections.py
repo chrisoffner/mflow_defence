@@ -35,7 +35,7 @@ class ProjectionSplit(transforms.Transform):
         return u, rest
 
     def inverse(self, inputs, **kwargs):
-        orthogonal_inputs = kwargs.get("orthogonal_inputs", torch.zeros(inputs.size(0), self.input_dim_total - self.output_dim)).to('cuda' if torch.cuda.is_available() else 'cpu')
+        orthogonal_inputs = kwargs.get("orthogonal_inputs", torch.zeros(inputs.size(0), self.input_dim_total - self.output_dim)).to('mps' if torch.backends.mps.is_available() else 'cuda' if torch.cuda.is_available() else 'cpu')
         if self.mode_in == "vector" and self.mode_out == "vector":
             x = torch.cat((inputs, orthogonal_inputs), dim=1)
         elif self.mode_in == "image" and self.mode_out == "vector":
