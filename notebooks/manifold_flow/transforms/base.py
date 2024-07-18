@@ -238,7 +238,7 @@ class MultiscaleCompositeTransform(Transform):
             for inv_transform, input_chunk in zip(rev_inv_transforms[1:], rev_split_inputs[1:]):
                 tmp_concat_inputs = torch.cat([input_chunk, hiddens], dim=self._split_dim)
                 hiddens, logabsdet = inv_transform(tmp_concat_inputs, context)
-                total_logabsdet += logabsdet
+                total_logabsdet += logabsdet.to('mps' if torch.backends.mps.is_available() else 'cuda' if torch.cuda.is_available() else 'cpu')
 
             outputs = hiddens
 
