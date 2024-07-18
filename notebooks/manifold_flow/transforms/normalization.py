@@ -108,10 +108,13 @@ class ActNorm(transforms.Transform):
 
         if inputs.dim() == 4:
             batch_size, _, h, w = inputs.shape
-            logabsdet = h * w * torch.sum(self.log_scale) * torch.ones(batch_size)
+            summed = torch.sum(self.log_scale)
+            ones = torch.ones(batch_size).to('cuda' if torch.cuda.is_available() else 'cpu')
+            # print(f"summed.device: {summed.device}, ones.device: {ones.device}")
+            logabsdet = h * w * summed * ones
         else:
             batch_size, _ = inputs.shape
-            logabsdet = torch.sum(self.log_scale) * torch.ones(batch_size)
+            logabsdet = torch.sum(self.log_scale) * torch.ones(batch_size).to('cuda' if torch.cuda.is_available() else 'cpu')
 
         return outputs, logabsdet
 
@@ -124,10 +127,13 @@ class ActNorm(transforms.Transform):
 
         if inputs.dim() == 4:
             batch_size, _, h, w = inputs.shape
-            logabsdet = -h * w * torch.sum(self.log_scale) * torch.ones(batch_size)
+            logabsdet = -h * w * torch.sum(self.log_scale) * torch.ones(batch_size).to('cuda' if torch.cuda.is_available() else 'cpu')
         else:
             batch_size, _ = inputs.shape
-            logabsdet = -torch.sum(self.log_scale) * torch.ones(batch_size)
+            summed = -torch.sum(self.log_scale)
+            ones = torch.ones(batch_size).to('cuda' if torch.cuda.is_available() else 'cpu')
+            # print(f"summed.device: {summed.device}, ones.device: {ones.device}")
+            logabsdet = summed * ones
 
         return outputs, logabsdet
 

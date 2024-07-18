@@ -69,10 +69,10 @@ class CompositeTransform(Transform):
             return outputs, total_jacobian
 
         else:
-            total_logabsdet = torch.zeros(batch_size)
+            total_logabsdet = torch.zeros(batch_size).to('cuda' if torch.cuda.is_available() else 'cpu')
             for func in funcs:
                 outputs, logabsdet = func(outputs, context)
-                total_logabsdet += logabsdet
+                total_logabsdet += logabsdet.to('cuda' if torch.cuda.is_available() else 'cpu')
             return outputs, total_logabsdet
 
     def forward(self, inputs, context=None, full_jacobian=False):
@@ -186,11 +186,11 @@ class MultiscaleCompositeTransform(Transform):
 
         else:
             all_outputs = []
-            total_logabsdet = torch.zeros(batch_size)
+            total_logabsdet = torch.zeros(batch_size).to('cuda' if torch.cuda.is_available() else 'cpu')
 
             for outputs, logabsdet in cascade():
                 all_outputs.append(outputs.reshape(batch_size, -1))
-                total_logabsdet += logabsdet
+                total_logabsdet += logabsdet.to('cuda' if torch.cuda.is_available() else 'cpu')
 
             all_outputs = torch.cat(all_outputs, dim=-1)
             return all_outputs, total_logabsdet
@@ -229,11 +229,11 @@ class MultiscaleCompositeTransform(Transform):
             return outputs, total_jacobian
 
         else:
-            total_logabsdet = torch.zeros(batch_size)
+            total_logabsdet = torch.zeros(batch_size).to('cuda' if torch.cuda.is_available() else 'cpu')
 
             # We don't do the splitting for the last (here first) transform.
             hiddens, logabsdet = rev_inv_transforms[0](rev_split_inputs[0], context)
-            total_logabsdet += logabsdet
+            total_logabsdet += logabsdet.to('cuda' if torch.cuda.is_available() else 'cpu')
 
             for inv_transform, input_chunk in zip(rev_inv_transforms[1:], rev_split_inputs[1:]):
                 tmp_concat_inputs = torch.cat([input_chunk, hiddens], dim=self._split_dim)

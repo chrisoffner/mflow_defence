@@ -30,9 +30,9 @@ class BaseTrainer(object):
         self.device = torch.device("cuda" if self.run_on_gpu else "cpu")
         self.dtype = torch.double if double_precision else torch.float
         if self.run_on_gpu and double_precision:
-            torch.set_default_dtype("torch.cuda.DoubleTensor")
+            torch.set_default_dtype(torch.float64)
         elif self.run_on_gpu:
-            torch.set_default_dtype("torch.cuda.FloatTensor")
+            torch.set_default_dtype(torch.float32)
         elif double_precision:
             torch.set_default_dtype(torch.float64)
         else:
