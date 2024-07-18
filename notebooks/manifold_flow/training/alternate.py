@@ -10,6 +10,54 @@ import matplotlib.pyplot as plt
 
 from .trainer import BaseTrainer, logger, NanException, EarlyStoppingException
 
+# def plot_grid_lines(
+#         manifold_points: torch.Tensor,
+#         mflow_model:     torch.nn.Module,
+#         n_samples:       int,
+#         range:           float,
+#         axis:            str = "both",
+#         plot_title:      str = "",
+#         file_path:       Path|None = None
+#     ):
+#     # Set up the plot
+#     plt.figure(figsize=(5, 5), dpi=200)
+#     plt.title(plot_title)
+#     plt.scatter(*manifold_points.T, s=1, alpha=1, c="plum")
+
+#     grid_values = np.linspace(-range, range, 33)
+    
+#     for val in grid_values:
+#         # Generate points on a line grid
+#         if axis in ["x", "both"]:
+#             line_points = np.column_stack([np.full(n_samples, val), np.linspace(-range, range, n_samples)])
+#         if axis in ["y", "both"]:
+#             line_points = np.column_stack([np.linspace(-range, range, n_samples), np.full(n_samples, val)])
+        
+#         # Convert to torch tensor and ensure float32 dtype
+#         line_points_tensor = torch.tensor(line_points, dtype=torch.float32)
+
+#         # Map grid points from latent space to ambient data space
+#         points_proj = mflow_model.outer_transform.inverse(line_points_tensor)[0].detach().numpy()
+        
+#         # Plot the warped grid
+#         color = "hotpink" if abs(val) < 0.1 else "lightgray"
+#         lw    = 2         if abs(val) < 0.1 else 0.8
+#         plt.plot(points_proj[:, 0], points_proj[:, 1], lw=lw, color=color)
+
+#     # Finalize plot settings
+#     plt.gca().set_aspect("equal", adjustable="box")
+#     plt.axis("off")
+#     plt.xlim(-2.3, 2.3)
+#     plt.ylim(-2.3, 2.3)
+#     plt.tight_layout()
+
+#     if file_path is not None:
+#         plt.savefig(str(file_path))
+    
+#     plt.close()
+#     plt.cla()
+#     plt.clf()
+
 def plot_grid_lines(
         manifold_points: torch.Tensor,
         mflow_model:     torch.nn.Module,
@@ -19,36 +67,51 @@ def plot_grid_lines(
         plot_title:      str = "",
         file_path:       Path|None = None
     ):
-    # Set up the plot
+    val_range = 2.5
+    grid_density = 13
     plt.figure(figsize=(5, 5), dpi=200)
     plt.title(plot_title)
-    plt.scatter(*manifold_points.T, s=1, alpha=1, c="plum")
+    plt.scatter(*manifold_points.T, s=1, c="thistle")
 
-    grid_values = np.linspace(-range, range, 33)
-    
-    for val in grid_values:
-        # Generate points on a line grid
-        if axis in ["x", "both"]:
-            line_points = np.column_stack([np.full(n_samples, val), np.linspace(-range, range, n_samples)])
-        if axis in ["y", "both"]:
-            line_points = np.column_stack([np.linspace(-range, range, n_samples), np.full(n_samples, val)])
+    for y_val in torch.linspace(-1, 1, grid_density) * val_range:
+        if y_val.abs() < 0.1:
+            color  = "midnightblue"
+            lw     = 3
+            zorder = 3
+        else:
+            color = plt.get_cmap("RdYlGn")((y_val / val_range + 1) / 2)
+            lw    = 0.8
+            zorder = 1
         
-        # Convert to torch tensor and ensure float32 dtype
-        line_points_tensor = torch.tensor(line_points, dtype=torch.float32)
+        xs          = torch.linspace(-val_range, val_range, n_samples)
+        ys          = torch.full_like(xs, y_val.item())
+        line_points = torch.column_stack([xs, ys])
 
-        # Map grid points from latent space to ambient data space
-        points_proj = mflow_model.outer_transform.inverse(line_points_tensor)[0].detach().numpy()
-        
-        # Plot the warped grid
-        color = "hotpink" if abs(val) < 0.1 else "lightgray"
-        lw    = 2         if abs(val) < 0.1 else 0.8
-        plt.plot(points_proj[:, 0], points_proj[:, 1], lw=lw, color=color)
+        # Transform points from latent space to ambiet space
+        points_proj = mflow_model.outer_transform.inverse(line_points)[0].detach().numpy()
 
-    # Finalize plot settings
+        # Plotting
+        # plt.plot(line_points[:, 0], line_points[:, 1], lw=lw, color=color, zorder=zorder)
+        plt.plot(points_proj[:, 0], points_proj[:, 1], lw=lw, color=color, zorder=zorder)
+
+    for x_val in torch.linspace(-val_range, val_range, grid_density):
+        ys          = torch.linspace(-val_range, val_range, n_samples)
+        xs          = torch.full_like(xs, x_val.item())
+        line_points = torch.column_stack([xs, ys])
+
+        # Transform points from latent space to ambiet space
+        points_proj = mflow_model.outer_transform.inverse(line_points)[0].detach().numpy()
+
+        # Plotting
+        color = plt.get_cmap("RdYlGn")((x_val / val_range + 1) / 2)
+        # plt.plot(line_points[:, 0], line_points[:, 1], lw=0.8, color=color)
+        plt.plot(points_proj[:, 0], points_proj[:, 1], lw=0.8, color=color)
+
     plt.gca().set_aspect("equal", adjustable="box")
     plt.axis("off")
     plt.xlim(-2.3, 2.3)
     plt.ylim(-2.3, 2.3)
+    plt.margins(0)
     plt.tight_layout()
 
     if file_path is not None:
