@@ -24,10 +24,10 @@ class BaseTrainer(object):
     def __init__(self, model, run_on_gpu=True, multi_gpu=True, double_precision=False):
         self.model = model
 
-        self.run_on_gpu = run_on_gpu and torch.cuda.is_available()
+        self.run_on_gpu = run_on_gpu and (torch.cuda.is_available() or torch.backends.mps.is_available())
         self.multi_gpu = self.run_on_gpu and multi_gpu and torch.cuda.device_count() > 1
 
-        self.device = torch.device("cuda" if self.run_on_gpu else "cpu")
+        self.device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if self.run_on_gpu else "cpu")
         self.dtype = torch.double if double_precision else torch.float
         if self.run_on_gpu and double_precision:
             torch.set_default_dtype(torch.float64)
