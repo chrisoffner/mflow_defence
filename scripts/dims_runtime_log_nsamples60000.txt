@@ -1,0 +1,5 @@
+Run: 0, Dimension: 25, Runtime: 17201.65 seconds, Final eval loss: 0.012747207780679067
+Run: 1, Dimension: 25, Runtime: 17314.33 seconds, Final eval loss: 0.013249611438562472
+Run: 2, Dimension: 25, Runtime: 3871.29 seconds, Final eval loss: 0.013957080033918223
+Run: 3, Dimension: 25, Runtime: 2793.06 seconds, Final eval loss: 0.014559153790275255
+Run: 4, Dimension: 25, Runtime: 3879.00 seconds, Final eval loss: 0.014421166628599167
