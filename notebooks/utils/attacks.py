@@ -48,7 +48,7 @@ def fgsm(
     # Run a forward pass of the model and compute the loss
     model.zero_grad()
     logits = model(input)
-    target = torch.LongTensor([label])
+    target = torch.LongTensor([label]).to(label.device)
     loss   = nn.CrossEntropyLoss()(logits, target)
 
     # Run backprop to get gradient w.r.t. the input we wish to modify
