@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from torch.utils.data import TensorDataset
+import torch.nn as nn
+from torchvision.models import resnet50
+
 # from pathlib import Path
 
 
@@ -102,6 +105,24 @@ def create_contour_plot(
         plt.cla()
         plt.close("all")
 
+class resnet_CIFAR10(nn.Module):
+    def __init__(self, resnet_checkpoint, device):
+        super(resnet_CIFAR10, self).__init__()
+
+        self.upsample = nn.Upsample(size=244)
+
+        # Init ResNet50  
+        rn = resnet50()
+        # Modify the ResNet-50 architecture for CIFAR-10: 10 output classes 
+        rn.fc = torch.nn.Linear(rn.fc.in_features, 10)
+        # Load pre-trained weights
+        rn.load_state_dict(torch.load(resnet_checkpoint, map_location=torch.device(device)))  
+        self.resnet = rn
+    
+    def forward(self, x):
+        x = self.upsample(x)
+        x = self.resnet(x)
+        return x
 
 # def plot_grid_lines(
 #     mflow:     torch.nn.Module,
