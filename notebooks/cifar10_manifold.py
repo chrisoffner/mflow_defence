@@ -89,13 +89,13 @@ def main():
         steps_per_level = outerlayers // levels
 
         # Define M-Flow model
-        params = {
-            "base_transform_type": "rq-coupling",
-            "n_flow_steps"       : 16,   # Depth (#layers)  of the "outer transform"
-            "hidden_features"    : 100,  # Width (#neurons) of the "outer transform"
-            "n_transform_blocks" : 6,     # ???
-            "dropout"            : 0.
-        }
+        # params = {
+        #     "base_transform_type": "rq-coupling",
+        #     "n_flow_steps"       : 16,   # Depth (#layers)  of the "outer transform"
+        #     "hidden_features"    : 100,  # Width (#neurons) of the "outer transform"
+        #     "n_transform_blocks" : 6,     # ???
+        #     "dropout"            : 0.
+        # }
 
         mflow = ManifoldFlow(
             data_dim=(3, 32, 32),
