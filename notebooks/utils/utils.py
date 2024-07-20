@@ -110,7 +110,7 @@ class resnet_CIFAR10(nn.Module):
     def __init__(self, resnet_checkpoint, device):
         super(resnet_CIFAR10, self).__init__()
 
-        self.upsample = transforms.Resize(244)
+        self.upsample = transforms.Resize(224)
 
         # Init ResNet50  
         rn = resnet50()
