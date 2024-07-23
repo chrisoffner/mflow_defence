@@ -21,6 +21,14 @@ parser.add_argument('--eps_step', '-s', type=float, help='epsilon step size for 
 
 args = parser.parse_args()
 
+
+print("==> running with arguments:")
+print(f"   * resnet: {args.resnet}")
+print(f"   * num_eps: {args.num_eps}")
+print(f"   * min_eps: {args.min_eps}")
+print(f"   * max_eps: {args.max_eps}")
+print(f"   * eps_step: {args.eps_step}")
+
 # Set device
 device = torch.device(
     "cuda" if torch.cuda.is_available()
@@ -59,8 +67,8 @@ eps_step = args.eps_step
 print("==> generating datasets with the following attack parameters:")
 print(f"   * num_eps: {n_epsilons}")
 print(f"   * min_eps: {min_eps}")
-print(f"   * max_eps: {n_epsilons}")
-print(f"   * eps_step: {n_epsilons}")
+print(f"   * max_eps: {max_eps}")
+print(f"   * eps_step: {eps_step}")
 
 for idx_eps, eps in enumerate(epsilons):
 
