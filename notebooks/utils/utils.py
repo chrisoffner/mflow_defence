@@ -4,6 +4,7 @@ import numpy as np
 import torch
 from torch.utils.data import TensorDataset
 import torch.nn as nn
+import torchvision.transforms as transforms
 from torchvision.models import resnet50
 
 # from pathlib import Path
@@ -109,7 +110,7 @@ class resnet_CIFAR10(nn.Module):
     def __init__(self, resnet_checkpoint, device):
         super(resnet_CIFAR10, self).__init__()
 
-        self.upsample = nn.Upsample(size=244)
+        self.upsample = transforms.Resize(224)
 
         # Init ResNet50  
         rn = resnet50()
