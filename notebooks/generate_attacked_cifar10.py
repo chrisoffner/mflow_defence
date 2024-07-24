@@ -40,8 +40,9 @@ print(f"Using device: {device}")
 transform = transforms.ToTensor()
 
 # Load CIFAR-10 test dataset
+bs = 64
 test_data = torchvision.datasets.CIFAR10(root="../data/cifar10", train=False, download=True, transform=transform)
-test_loader = DataLoader(test_data, shuffle=False)
+test_loader = DataLoader(test_data, batch_size=bs, shuffle=False)
 print(f"dataset size: {len(test_data)}")
 
 # Validate ResNet checkpoint path
@@ -91,10 +92,11 @@ for idx_eps, eps in enumerate(epsilons):
         # Generate adversarial attack sample for PGD attack
         x_adv_pgd = pgd(model, x=x_orig, label=label, k=k, eps=eps, eps_step=eps_step, targeted=False, clip_min=0, clip_max=1).detach()
 
-        attacked_dataset["fgsm"].append((x_adv_fgsm[0].to(torch.device("cpu")), label))
-        attacked_dataset["pgd"].append((x_adv_pgd[0].to(torch.device("cpu")), label))
+        attacked_dataset["fgsm"].extend(zip(x_adv_fgsm.to(torch.device("cpu")), label[:,None]))
+        attacked_dataset["pgd"].extend(zip(x_adv_pgd.to(torch.device("cpu")), label[:,None]))
 
     # Save attacked dataset
     for atk in ["fgsm", "pgd"]:
+        print(attacked_dataset[atk][0][0].shape, attacked_dataset[atk][0][1].shape)
         torch.save(attacked_dataset[atk], path_eps[atk])
             
