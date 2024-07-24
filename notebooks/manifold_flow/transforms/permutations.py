@@ -70,6 +70,8 @@ class Permutation(transforms.Transform):
 
             return outputs, jacobian
         else:
+            # print(f"inputs.device: {inputs.device}, permutation.device: {permutation.device}")
+            inputs = inputs.to('cpu')
             outputs = torch.index_select(inputs, dim, permutation)
             logabsdet = torch.zeros(batch_size)
             return outputs, logabsdet
