@@ -4,7 +4,7 @@ import torch.nn as nn
 def fgsm(
         model:    torch.nn.Module,
         x:        torch.Tensor,
-        label:    int,
+        label:    torch.Tensor,
         eps:      float,
         targeted: bool = True,
         clip_min: None|float = None,
@@ -20,7 +20,7 @@ def fgsm(
         be generated.
     x : torch.Tensor
         The data sample to be turned into an adversarial sample.
-    label : int
+    label : torch.Tensor
         If `targeted == True` this is the index of the (incorrect) class that
         the adversarial sample should get classified to. If `targeted == False`,
         this is the index of the correct class of `x`.
@@ -48,7 +48,7 @@ def fgsm(
     # Run a forward pass of the model and compute the loss
     model.zero_grad()
     logits = model(input)
-    target = torch.LongTensor([label]).to(label.device)
+    target = label.to(label.device)
     loss   = nn.CrossEntropyLoss()(logits, target)
 
     # Run backprop to get gradient w.r.t. the input we wish to modify
@@ -71,7 +71,7 @@ def fgsm(
 def pgd(
         model:    torch.nn.Module,
         x:        torch.Tensor,
-        label:    int,
+        label:    torch.Tensor,
         k:        int,
         eps:      float,
         eps_step: float,
@@ -91,7 +91,7 @@ def pgd(
         The model to attack.
     x : torch.Tensor
         The input tensor to perturb.
-    label : int
+    label : torch.Tensor
         If `targeted == True` this is the index of the (incorrect) class that
         the adversarial sample should get classified to. If `targeted == False`,
         this is the index of the correct class of `x`.
