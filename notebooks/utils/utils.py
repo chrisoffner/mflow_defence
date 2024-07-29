@@ -7,8 +7,6 @@ import torch.nn as nn
 import torchvision.transforms as transforms
 from torchvision.models import resnet50
 
-# from pathlib import Path
-
 
 def get_grid_predictions(
         model: torch.nn.Module,
@@ -125,47 +123,3 @@ class resnet_CIFAR10(nn.Module):
         x = self.resnet(x)
         return x
 
-# def plot_grid_lines(
-#     mflow:     torch.nn.Module,
-#     n_samples: int,
-#     range:     float,
-#     axis:      str = "both",
-#     file_path: Path | None = None,
-# ):
-#     # Set up the plot
-#     plt.figure(figsize=(5, 5), dpi=200)
-#     plt.scatter(*manifold_points.T, s=1, alpha=1, c="plum")
-
-#     grid_values = np.linspace(-range, range, 33)
-
-#     for val in grid_values:
-#         # Generate points on a line grid
-#         if axis in ["x", "both"]:
-#             line_points = np.column_stack([np.full(n_samples, val), np.linspace(-range, range, n_samples)])
-#         if axis in ["y", "both"]:
-#             line_points = np.column_stack([np.linspace(-x_range, x_range, n_samples), np.full(n_samples, val)])
-
-#         # Convert to torch tensor and ensure float32 dtype
-#         line_points_tensor = torch.tensor(line_points, dtype=torch.float32)
-
-#         # Map grid points from latent space to ambient data space
-#         points_proj = mflow.outer_transform.inverse(line_points_tensor)[0].detach().numpy()
-
-#         # Plot the warped grid
-#         color = "hotpink" if abs(val) < 0.1 else "lightgray"
-#         lw    = 2         if abs(val) < 0.1 else 0.8
-#         plt.plot(points_proj[:, 0], points_proj[:, 1], lw=lw, color=color)
-
-#     # Finalize plot settings
-#     plt.gca().set_aspect("equal", adjustable="box")
-#     plt.axis("off")
-#     plt.xlim(-2.3, 2.3)
-#     plt.ylim(-2.3, 2.3)
-#     plt.tight_layout()
-
-#     if file_path is not None:
-#         plt.savefig(str(file_path))
-
-#     plt.close()
-#     plt.cla()
-#     plt.clf()

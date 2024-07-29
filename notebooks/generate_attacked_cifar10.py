@@ -5,6 +5,7 @@ from torchvision.models import resnet50
 from torch.utils.data import DataLoader
 from utils.attacks import fgsm, pgd
 from utils.utils import resnet_CIFAR10
+from tqdm import tqdm
 
 import os
 import argparse
@@ -72,6 +73,7 @@ print(f"   * max_eps: {max_eps}")
 print(f"   * eps_step: {eps_step}")
 
 for idx_eps, eps in enumerate(epsilons):
+    print(f"{idx_eps / len(epsilons)} Generating for eps = {eps}...")
 
     attacked_dataset = {}
     attacked_dataset["fgsm"] = []
@@ -84,7 +86,7 @@ for idx_eps, eps in enumerate(epsilons):
     path_eps["pgd"] = base_path / Path(f"cifar10_pgd_eps_{eps:0.3f}.pt")
 
     # Iterate over dataset
-    for x_orig, label in test_loader:
+    for x_orig, label in tqdm(test_loader):
         x_orig, label = x_orig.to(device), label.to(device)
         k = steps[idx_eps]
         # Generate adversarial attack sample for FGSM attack
@@ -99,4 +101,3 @@ for idx_eps, eps in enumerate(epsilons):
     for atk in ["fgsm", "pgd"]:
         print(attacked_dataset[atk][0][0].shape, attacked_dataset[atk][0][1].shape)
         torch.save(attacked_dataset[atk], path_eps[atk])
-            
