@@ -1,6 +1,10 @@
 # Adversarial Defences with Manifold-Learning Flows
 
-This repository contains code by Claire Bräuer, Pablo Robles Cervantes, Yufei Liu, and Chris Offner for a project that was done as part of the **Computational Intelligence Lab 2024** at ETH Zurich.
+This repository contains the code for a course project done in the **Computational Intelligence Lab 2024** at ETH Zurich by
+- **[Claire Bräuer](mailto:claireabareuer@gmail.com)**
+- **[Pablo Robles Cervantes](mailto:probles@student.ethz.ch)**
+- **[Yufei Liu](mailto:yufei.liu@inf.ethz.ch)**
+- **[Chris Offner](mailto:chrisoffner@pm.me)**
 
 ![](static/videos/readme_anim.gif)
 
@@ -11,8 +15,6 @@ We illustrate the underlying principles of our method with a low-dimensional ped
 Supplementary animations that elucidate some of the discussed dynamics can be found on https://chrisoffner.github.io/mflow_defence/.
 
 ---
-
-## Structure
 
 ### Jupyter notebooks
 
