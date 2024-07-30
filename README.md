@@ -8,7 +8,7 @@ This repository contains the code for a course project done in the **Computation
 
 ![](static/videos/readme_anim.gif)
 
-Adversarial vulnerability remains a significant challenge for deep neural networks, as inputs manipulated with imperceptible perturbations can induce misclassification. Recent research posits that natural data occupies low-dimensional manifolds, while adversarial samples reside in the ambient space beyond these manifolds. Motivated by this _off-manifold hypothesis,_ we propose and examine a novel defense mechanism that employs **[manifold-learning normalizing flows ($\mathcal{M}$-Flows)](https://arxiv.org/abs/2003.13913)** to project input samples onto approximations of the data manifold prior to classification.
+Adversarial vulnerability remains a significant challenge for deep neural networks, as inputs manipulated with imperceptible perturbations can induce misclassification. Recent research posits that natural data occupies low-dimensional manifolds, while adversarial samples reside in the ambient space beyond these manifolds. Motivated by this _off-manifold hypothesis,_ we propose and examine a novel defense mechanism that employs **[manifold-learning normalizing flows (\(\mathcal{M}\)-Flows)](https://arxiv.org/abs/2003.13913)** to project input samples onto approximations of the data manifold prior to classification.
 
 We illustrate the underlying principles of our method with a low-dimensional pedagogical example before testing its effectiveness on high-dimensional natural image data. While our method shows promise in principle on low-dimensional data, learning the data manifold proves highly unstable and sensitive to initial conditions. On image data, our method fails to surpass the baseline.
 
