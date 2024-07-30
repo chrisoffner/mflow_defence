@@ -19,7 +19,7 @@ Supplementary animations that elucidate some of the discussed dynamics can be fo
 ### Jupyter notebooks
 
 - `notebooks/two_spirals.ipynb`: Training the _Two Spirals_ classifier.
-- `notebooks/attack_spiral_classifier.ipynb`: Adversarial attacks and defense of the _Two Spirals_ classifier. *Fig. 1** in the report was created here.
+- `notebooks/attack_spiral_classifier.ipynb`: Adversarial attacks and defense of the _Two Spirals_ classifier. **Fig. 1** in the report was created here.
 - `notebooks/defense_cases_frequency.ipynb`: Measuring the relative frequency of attack/defense cases **(A) - (D)** as described in **Sec. 3** of the report. **Fig. 5.** was created here.
 - `notebooks/spiral_manifold_projection.ipynb`: Visualisations of the learned _on-manifold_ projection. **[Animations](https://chrisoffner.github.io/mflow_defence/)**, **Fig. 3**, and **Fig. 4** from the report were created here.
 - ...
