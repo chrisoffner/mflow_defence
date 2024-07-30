@@ -2,9 +2,7 @@
 
 This repository contains code by Claire Bräuer, Pablo Robles Cervantes, Yufei Liu, and Chris Offner for a project that was done as part of the **Computational Intelligence Lab 2024** at ETH Zurich.
 
-<div align="center">
-    <video src="static/videos/spiral_horizontal_line_transform_D.mp4" width="600" loop />
-</div>
+![](static/videos/readme_anim.gif)
 
 Adversarial vulnerability remains a significant challenge for deep neural networks, as inputs manipulated with imperceptible perturbations can induce misclassification. Recent research posits that natural data occupies low-dimensional manifolds, while adversarial samples reside in the ambient space beyond these manifolds. Motivated by this _off-manifold hypothesis,_ we propose and examine a novel defense mechanism that employs **[manifold-learning normalizing flows ($\mathcal{M}$-Flows)](https://arxiv.org/abs/2003.13913)** to project input samples onto approximations of the data manifold prior to classification.
 
