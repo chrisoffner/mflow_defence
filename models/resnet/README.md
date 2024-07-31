@@ -1,6 +1,6 @@
 # PyTorch ResNet-50 CIFAR-10 classifier
 
-Pre-trained checkpoint `resnet50_cifar10.pt` achieves a train accuracy of 99.46% and test accuracy of **96.27%**.
+A pre-trained checkpoint `resnet50_cifar10.pt` can be [downloaded here](https://polybox.ethz.ch/index.php/s/8OnOAIeCrrkpglR). It achieves a train accuracy of 99.46% and test accuracy of **96.27%**.
 
 To train a ResNet-50 from scratch (will start from [pre-trained ImageNet weights](https://pytorch.org/vision/stable/models.html#initializing-pre-trained-models)), run: 
 

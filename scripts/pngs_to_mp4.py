@@ -44,7 +44,7 @@ def create_video_from_images(image_dir, output_filename, fps=24):
 
 if __name__ == "__main__":
     # Define the path to the directory containing the images
-    FIGURES_DIR = Path("notebooks/animation_frames")
-    OUTPUT_PATH = FIGURES_DIR / "horizontal_line.mp4"
+    FIGURES_DIR = Path("figures/spiral_horizontal_line_transform_A")
+    OUTPUT_PATH = FIGURES_DIR / "spiral_horizontal_line_transform_A.mp4"
 
-    create_video_from_images(FIGURES_DIR, OUTPUT_PATH, fps=30)
+    create_video_from_images(FIGURES_DIR, OUTPUT_PATH, fps=24)
