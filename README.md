@@ -28,28 +28,25 @@ Supplementary animations that elucidate some of the discussed dynamics can be fo
 ### Python scripts
 
 - `notebooks/two_spirals_utils.py`: Generates the _Two Spirals_ dataset.
-- `notebooks/generate_attacked_cifar10.py`: Generates datasets of adversarial FGSM and PGD attacks against the CIFAR-10 dataset for the specified perturbation magnitudes.  The default parameters correspond to the attacks we performed.  
+- `notebooks/generate_attacked_cifar10.py`: Generates datasets of adversarial FGSM and PGD attacks against the CIFAR-10 dataset for the specified perturbation magnitudes.  The default parameters correspond to the attacks we performed.
     <details>
     <summary>Requirements</summary> 
 
     - Must be run inside `notebooks/`.
 
     - Trained ResNet-50 classifier checkpoint saved in `models/resnet/resnet50_cifar10.pt` (instructions [here](./models/resnet/README.md)).
-
-    - Attacked datasets generated with `generate_attacked_cifar10.py`.
     </details>
-- `notebooks/undefended_resnet_accuracy.py`: Measure the classification accuracy of the ResNet classifier after being attacked. 
+- `notebooks/undefended_resnet_accuracy.py`: Measure the classification accuracy of the ResNet classifier after being attacked.
     <details>
     <summary>Requirements</summary> 
 
     - Must be run inside `notebooks/`.
 
-    - Trained ResNet-50 classifier checkpoint saved in `models/resnet/resnet50_cifar10.pt`
+    - Trained ResNet-50 classifier checkpoint saved in `models/resnet/resnet50_cifar10.pt`.
 
     - Attacked datasets generated with `generate_attacked_cifar10.py`.
     </details>
-
-- `notebooks/pixeldefend_cases_frequency.py`: Measures the relative frequency of attack/defense cases for the _PixelDefend_ baseline on CIFAR-10.  
+- `notebooks/pixeldefend_cases_frequency.py`: Measures the relative frequency of attack/defense cases for the _PixelDefend_ baseline on CIFAR-10. 
     <details>
     <summary>Requirements</summary> 
 
