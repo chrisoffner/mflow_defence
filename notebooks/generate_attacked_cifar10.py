@@ -5,6 +5,7 @@ from torchvision.models import resnet50
 from torch.utils.data import DataLoader
 from utils.attacks import fgsm, pgd
 from utils.utils import resnet_CIFAR10
+from tqdm import tqdm
 
 import os
 import tarfile
@@ -71,7 +72,8 @@ print(f"   * max_eps: {max_eps}")
 print(f"   * eps_step: {eps_step}")
 
 for idx_eps, eps in enumerate(epsilons):
-    print(f"processing eps = {eps}, ({idx_eps} / {len(epsilons)})")
+    print(f"{idx_eps / len(epsilons)} Generating for eps = {eps}...")
+
     attacked_dataset = {}
     for atk in attacks:
         attacked_dataset[atk] = []
@@ -83,7 +85,7 @@ for idx_eps, eps in enumerate(epsilons):
         path_eps[atk] = base_path / Path(f"cifar10_{atk}_eps_{eps:0.3f}.tar.gz")
 
     # Iterate over dataset
-    for x_orig, label in test_loader:
+    for x_orig, label in tqdm(test_loader):
         x_orig, label = x_orig.to(device), label.to(device)
         k = steps[idx_eps]
         for atk in attacks: 

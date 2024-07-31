@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
+    <!-- Replace the content tag with appropriate information -->
+    <meta name="description" content="Exploration of manifold-learning normalizing flows (M-Flows) for adversarial robustness">
+    <meta property="og:title" content="Deep Learning 2023 course project" />
+    <meta property="og:description" content="Manifold-Learning Normalizing Flows for Adversarial Robustness" />
+    <meta property="og:url" content="https://chrisoffner.github.io/dl23_course_project/" />
+    <!-- Path to banner image, should be in the path listed below. Optimal dimensions are 1200X630-->
+    <!-- <meta property="og:image" content="static/image/your_banner_image.png" /> -->
+    <meta property="og:image:height" content="630" />
+
+    <title>Adversarial Defense with Manifold-Learning Flows</title>
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Latin+Modern+Roman:400,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="static/css/bulma.min.css">
+    <link rel="stylesheet" href="static/css/index.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+    <script defer src="static/js/fontawesome.all.min.js"></script>
+    <script src="static/js/bulma-carousel.min.js"></script>
+    <script src="static/js/bulma-slider.min.js"></script>
+    <script src="static/js/index.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+</head>
+
+
+<body>
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered">
+                    <div class="column has-text-centered">
+                        <h1 class="title is-1 publication-title">Adversarial Defense <br> with Manifold-Learning Flows</h1>
+                        <h2 class="title is-3">Computational Intelligence Lab 2024 at ETH Zürich</h2>
+                        <div class="is-size-5 publication-authors">
+                            <!-- Paper authors -->
+                            <span class="author-block">
+                                <a href="mailto:chrisoffner@pm.me" target="_blank">Chris Offner</a>,</span>
+                            <span class="author-block">
+                                <a href="mailto:cbraeuer@gmail.com" target="_blank">Claire Bräuer</a>,</span>
+                            <span class="author-block">
+                                <a href="mailto:probles@student.ethz.ch" target="_blank">Pablo Robles Cervantes</a>,
+                            </span>
+                            <span class="author-block">
+                                <a href="mailto:yufei.liu@inf.ethz.ch" target="_blank">Yufei Liu</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero teaser">
+        <div class="container is-max-desktop">
+            <div class="hero-body">
+                <h2 class="has-text-justified">
+                    This page contains supplementary animations for the report of a <b><a href="https://github.com/chrisoffner/mflow_defence" target="_blank">research project</a></b> done as part of the <it>Computational Intelligence Lab 2024</it> at ETH Zürich. Its aim is to investigate the efficacy of <it>on-manifold projection</it> via manifold-learning normalizing flows (\(\mathcal{M}\)-Flows) as an adversarial defense mechanism.
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- Classifying Two Spirals -->
+    <section class="hero teaser">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">Classifying Two Spirals</h2>
+            <div class="hero-body">
+                <video poster="" id="tree" autoplay controls muted loop style="width: 60%; max-width: 600px; display: block; margin-left: auto; margin-right: auto;">
+                    <source src="static/videos/spiral_boundaries_noise_20.mp4" type="video/mp4">
+                </video>
+                <h2 class="subtitle has-text-justified">
+                    We generate the <i>Two Spirals</i> dataset and train a simple binary classifier on it. The background colour shows the decision surface after each training epoch, and the model quickly finds a decision boundary that reliably separates the two classes. 
+                </h2>
+            </div>
+        </div>
+    </section>
+    <!-- End teaser video -->
+
+    <!-- Training M-Flows on Two Spirals -->
+    <section class="section hero is-light">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">Training \(\mathcal{M}\)-Flows on Two Spirals</h2>
+            <div class="container is-fluid">
+                <div class="columns is-centered">
+                  <div class="column is-4">
+                    <video poster="" autoplay controls=False muted loop style="width: 200%; display: block;">
+                      <source src="static/videos/mflow_training_7.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column is-4">
+                    <video poster="" autoplay controls muted loop style="width: 200%; display: block;">
+                      <source src="static/videos/mflow_training_9.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+              </div>
+              <div class="hero-body">
+                <video poster="" id="tree" autoplay controls muted loop style="width: 60%; max-width: 600px; display: block; margin-left: auto; margin-right: auto;">
+                    <source src="static/videos/mflow_training_success.mp4" type="video/mp4">
+                </video>
+                <h2 class="subtitle has-text-justified">
+                    We show how, during three \(\mathcal{M}\)-Flow training runs with identical architecture and hyperparameters, the learned function warps a grid in latent space \(U \times V\) to data space. The image of the level set \(V = 0\) is shown in dark blue. On top aretwo training runs that converge to local minima such that the final learned manifold does not closely match that of the training data. The training run on the bottom succeeds at learning the data manifold. Overall, training \(\mathcal{M}\)-Flows has proven extremely sensitive to initial conditions, and requires extraordinary efforts w.r.t. tuning architecture and hyperparameter choices.
+                </h2>
+            </div>
+        </div>
+    </section>
+    <!-- End teaser video -->
+
+    <!-- Mapping level sets of v to data space -->
+    <section class="section hero is-light">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">Mapping level sets of \(V\) to data space</h2>
+            <div class="container is-fluid">
+                <div class="columns is-centered">
+                  <div class="column is-4">
+                    <video poster="" autoplay controls=False muted loop style="width: 200%; display: block;">
+                      <source src="static/videos/spiral_horizontal_line_transform_A.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="column is-4">
+                    <video poster="" autoplay controls muted loop style="width: 200%; display: block;">
+                      <source src="static/videos/spiral_horizontal_line_transform_C.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+              </div>
+              <div class="hero-body">
+                <video poster="" id="tree" autoplay controls muted loop style="width: 60%; max-width: 600px; display: block; margin-left: auto; margin-right: auto;">
+                    <source src="static/videos/spiral_horizontal_line_transform_D.mp4" type="video/mp4">
+                </video>
+                <h2 class="subtitle has-text-justified">
+                    The coloured horizontal line represents a level set of \(V\) for some \(v \in [-2.2, 2.2]\) in the latent space \(U \times V.\) Each point \([u, v]^\top\) is mapped to data space via \(\mathbf{x} = f([u, v]^\top).\) At \(v = 0,\) i.e. when the coloured horizontal line lies on the dashed line, the points \([u, 0]^\top\) get mapped to the learned manifold. The animations above show three different functions, all learned with identical architecture and hyperparameters. The first one shows a function \(f_1\) that maps some points quite far from their latent space, e.g., when \(v \approx 2.2,\) red points get mapped from the top left to the bottom right. The second animation shows a function \(f_2\) for which the distance of mapped points from the learned manifold decreases in an almost step-like manner. While the horizontal line moves linearly and smoothly from bottom \((v = -2.2)\) to top \((v = 2.2),\) the image \(\mathrm{Img}(f_2([u, v]^\top))\) described by the coloured curve moves in noticeable steps. The third animation on the bottom shows \(f_3,\) the smoothest variant we managed to learn, and the one that most closely matched the data manifold.
+                </h2>
+            </div>
+        </div>
+    </section>
+    <!-- End teaser video -->
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    <div class="content">
+                        <p>
+                            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+                            <br> This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                throwOnError : false
+            });
+        });
+    </script>
+
+</body>
+
+</html>
