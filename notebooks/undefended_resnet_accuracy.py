@@ -11,10 +11,9 @@ from numpy.random import choice
 import matplotlib.pyplot as plt
 
 import os
-import argparse
 import tarfile
+import argparse
 from pathlib import Path
-import math
 
 parser = argparse.ArgumentParser(description="Plot Resnet-50 Accuracies on attacked CIFAR-10 datasets")
 parser.add_argument('--resnet', '-r', type=Path, help='path to trained resnet checkpoint', required=False, default="../models/resnet/resnet50_cifar10.pt")
@@ -25,7 +24,10 @@ parser.add_argument('--num_eps', '-n', type=int, help='number of epsilons', requ
 parser.add_argument('--min_eps', '-e', type=float, help='minimum value of attack epsilon', required=False, default=0.0)
 parser.add_argument('--max_eps', '-E', type=float, help='maximum value of attack epsilon', required=False, default=0.1)
 
-parser.add_argument('--plot_only', '-p', action='store_true', help='plot only by reading results from standard path')
+parser.add_argument('--plot_only', '-p', action='store_true',
+                    help='plot only by reading results from standard path, \
+                    requires to have run the script at least once before and have generated \
+                    `../data/experimental_results/attacked_undefended_resnet/accs_<attack>.pt` file')
 
 args = parser.parse_args()
 
@@ -36,13 +38,13 @@ device = torch.device(
 )
 print(f"Using device: {device}")
 
-# define range of epsilons to try attacks with
+# Define range of epsilons that was used in the attacks
 n_epsilons = args.num_eps
 min_eps = args.min_eps
 max_eps = args.max_eps
 epsilons = torch.linspace(min_eps, max_eps, n_epsilons)
 
-print("==> generating figure with attacked datasets with the following attack parameters:")
+print("==> generating results for attacked datasets with the following attack parameters:")
 print(f"   * num_eps: {n_epsilons}")
 print(f"   * min_eps: {min_eps}")
 print(f"   * max_eps: {n_epsilons}")
@@ -69,7 +71,7 @@ if not args.plot_only:
         torchvision.datasets.CIFAR10(root="../data/cifar10", train=False, download=True, transform=transform),
         subset_indices)
     test_loader = DataLoader(test_data, batch_size=bs, shuffle=False)
-    print(f"original dataset size: {len(test_data)}")
+    print(f"test dataset size: {len(test_data)}")
 
     # Validate ResNet checkpoint path
     assert os.path.exists(args.resnet), 'Error: no checkpoint file found!'
@@ -86,6 +88,7 @@ if not args.plot_only:
         attacked_dataloaders = {}
         iterators = {}
         for atk in attacks:
+            # Load attacked dataset
             file_path = Path(f"../data/cifar10_attacked/cifar10_{atk}_eps_{eps:0.3f}.tar.gz")
             with tarfile.open(file_path, "r:gz") as tar:
                 tar.extractall(path=file_path.parent)
@@ -99,6 +102,7 @@ if not args.plot_only:
 
         # Iterate over dataset
         for _, labels in test_loader:
+            labels = labels.to(device)
             # Generate adversarial attack sample for attacks
             x_adv = {}
             for atk in attacks:
@@ -114,19 +118,24 @@ if not args.plot_only:
 
             for atk in attacks:
                 pred_success = (pred_adv[atk] == labels)
-                # correct classifications
+                # Count correct and incorrect classifications
                 results[atk][idx_eps, 0] += pred_success.sum().item()
                 results[atk][idx_eps, 1] += labels.size(0) - pred_success.sum().item()
 
+        # Save checkpoints every 10 epsilon values
         if idx_eps % 10 == 0:
             for atk in attacks:
                 pth = path_results[atk]
                 torch.save(results[atk], pth.parent / (pth.stem + f"_ckpt_{idx_eps}_eps_{eps:0.3f}" + pth.suffix))
 
+# Plot results
 figures_dir = Path("../figures/attacked_undefended_resnet/")
 figures_dir.mkdir(parents=True, exist_ok=True)
 
-for atk in attacks:
+fs = 14
+fig, axs = plt.subplots(1, len(attacks), figsize=(5 * len(attacks), 4), dpi=200)
+plt.suptitle(f"Classification Accuracy of ResNet-50 vs Attacks (CIFAR-10)")
+for idx, atk in enumerate(attacks):
     if args.plot_only:
         results[atk] = torch.load(path_results[atk], map_location=device)
     else: 
@@ -134,18 +143,21 @@ for atk in attacks:
     # Normalize all cases so we get probabilities that sum to 1
     results[atk] /= results[atk].sum(dim=1)[:,None]
     correct, _ = results[atk].T
-    plt.figure(figsize=(5, 4), dpi=200)
-    plt.plot(epsilons, correct)
+    axs[idx].plot(epsilons, correct)
+    axs[idx].plot(epsilons[correct.argmax()], correct.max(), color="g", ls="", marker="v", ms=9, label=f"max: {correct.max():.2%}")
+    axs[idx].plot(epsilons[correct.argmin()], correct.min(), color="r", ls="", marker="^", ms=9, label=f"min: {correct.min():.2%}")
 
-    plt.suptitle(f"Accuracy of ResNet-50 vs {atk.upper()} Attack (CIFAR-10)")
-    plt.title(f"max acc: {correct.max():.2%}, min acc: {correct.min():.2%}")
-    plt.xlabel(r"Perturbation Magnitude ($\epsilon$)")
-    plt.ylabel("Classification Accuracy")
-    plt.grid(color='lightgrey', linestyle='-')
-    plt.gca().set_ylim(0, 1)
-    plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: '{:.0%}'.format(y)))
-    plt.gca().xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: '{:.3g}'.format(x)))
-    plt.margins(0)
+    axs[idx].legend(loc="best")
 
-    plt.tight_layout()
-    plt.savefig(figures_dir / f"accuracy_undefended_resnet_vs_{atk}.pdf")
+    axs[idx].set_title(atk.upper(), fontsize=fs)
+    axs[idx].set_xlabel(r"Perturbation Magnitude ($\epsilon$)", fontsize=fs)
+    axs[idx].set_ylabel("Classification Accuracy", fontsize=fs)
+    axs[idx].grid(color='lightgrey', linestyle='-')
+    axs[idx].set_ylim(0, 1)
+    axs[idx].yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: '{:.0%}'.format(y)))
+    axs[idx].xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: '{:.3g}'.format(x)))
+    axs[idx].margins(0)
+
+plt.tight_layout()
+plt.savefig(figures_dir / f"accuracy_undefended_resnet.pdf")
+plt.show()
