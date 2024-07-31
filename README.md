@@ -24,6 +24,7 @@ Supplementary animations that elucidate some of the discussed dynamics can be fo
 - `code/spiral_manifold_projection.ipynb`: Visualisations of the learned _on-manifold_ projection. **[Animations](https://chrisoffner.github.io/mflow_defence/)**, **Fig. 3**, and **Fig. 4** from the report were created here.
 - `code/attack_cifar10.ipynb`: Demo for attacking CIFAR-10 images.
     > NOTE: For automatic generation see the script `generate_attacked_cifar10py` below.
+- `code/manifold_defense_cases_frequency.ipynb`:  Measuring the relative frequency of attack/defense cases **(A) - (D)** on CIFAR10 vs FGSM and PGD was done here.
 
 ### Python scripts
 
@@ -58,3 +59,5 @@ Supplementary animations that elucidate some of the discussed dynamics can be fo
 
     - Purified datasets with [PixelDefend](https://github.com/microsoft/PixelDefend) with a defense radius $\epsilon_\text{def} = 16$. For each attack `<attack>` and attack perturbation magnitude `<eps>`, the script expects to find the corresponding purified datasets in `data/cifar10_pixeldefend/` as a tarball named `cifar10_<attack>_atkeps_<eps>_defeps_16.tar.gz`. The tarball should contain the dataset as a single file named `cifar10_<attack>_atkeps_<eps>_defeps_16.pt`.
     </details>
+
+- `code/cifar10_manifold.py`: Script used to train M-flow on the CIFAR10 dataset.
